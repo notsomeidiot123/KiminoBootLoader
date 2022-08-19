@@ -1,16 +1,9 @@
 #!/bin/bash
-clear
 echo "compiling"
 nasm -f bin bootloader/kiminoMBR.s -o bin/KBL.boot
 
 nasm -f bin bootloader/kiminoboot.s -o bin/KiminoPartBoot
 
-# nasm -f elf bootloader/kernelentry.s -o obj/kentry.obj
-nasm -f bin bootloader/kernelentry.s -o bin/ostest
-# gcc c/main.c -c -g -ffreestanding -fno-pie -o o/main.o -m32 -w -Wimplicit-function-declaration -Wimplicit
+cat bin/KBL bin/KiminoPartBoot > bin/KiminoBoot
 
-# ld --oformat binary -Ttext 0x10000 obj/kentry.obj -o bin/KiminoOS -melf_i386
-
-cat bin/KBL.boot bin/KiminoPartBoot bin/ostest > KiminoOS.iso
-
-qemu-system-x86_64 -m 1G -name KiminoOS -no-reboot -no-shutdown -fda drives/fdrive.fd -hda KiminoOS.iso -hdb drives/hdrive.hd -monitor stdio
+echo "cat bin/KiminoBoot \{your_kernel\} > \{OS.iso\} to get your final image" 
