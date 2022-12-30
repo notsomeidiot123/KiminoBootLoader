@@ -26,12 +26,12 @@ power:
     call printstr
 
     call clear_gp
-    mov eax, KiminoOS_Part; base of the partition table
+    mov eax, Part_0; base of the partition table
     looppart:
         cmp cx, 4
         je noboot;
-        cmp byte [eax], 0x81
-        je load_os
+        cmp byte [eax], 0x80
+        jge load_os
         inc cx
         add ax, 16 
         jmp looppart;loop until found bootable sector
@@ -62,7 +62,7 @@ power:
             jne noboot
             
             mov eax, [offset]
-            mov ebx, [eax+8]
+            mov ebx, [eax + 8]
             mov [DAP.start],ebx
             mov ah, 0x42
             mov dl, [bootdisc]
@@ -85,18 +85,18 @@ power:
 
 jmp $
     
-%include "bootloader/strutils.s"
-%include "bootloader/bootutils.s"
+%include "src/MBR/strutils.s"
+%include "src/MBR/bootutils.s"
 
 bfloppy: db "BOOTING FROM FLOPPY DISK", 0xa, 0xd, 0x0
 nobootstr: db "NO BOOTABLE PARTITION FOUND", 0xa, 0xd, 0x0
-mark: db "KIMINOMBR v1.0.2", 0xa, 0xd, 0
+mark: db "KIMINOMBR v1.1.0", 0xa, 0xd, 0
 PartBoot equ 0x7c00
 bootdisc db 0
 offset dd 0
 DAP:
     .size:
-        db 0x10
+        db 0x1
     .res:
         db 0
     .sectors:
@@ -111,72 +111,88 @@ DAP:
 times 440-($-$$) db 0
 db 'K', 'I','M','I'
 dw 0
-KiminoOS_Part:
+Part_0:
     .flags:
         db 0x81;bootable offset 0
-    .sig1:
-        db 0x14;KIMINOMBR LBA48 bit bootable signature offset 1
-    .base16high:
-        dw 0   ;high 16 bits of LBA48 base address, offset 2
-    .fs_type:
-        db 0x7f;unofficial "Custom FS" signature, offset 4
-    .sig2:
-        db 0xeb;KIMINOMBR LBA48 boot signature offset 5
-    .limit16high:
-        dw 0xffff;all high indicates to end of drive offset 6
-    .base32low:
-        dd 0x00000001;second LBA Sector, base offset 8
-    .limit32low:
-        dd 0xffffFFFF;all high indicates base to end of drive offset 12
-Part_O:
-    .flags:
+    .start_head:
         db 0
-    .sig1:
+    .start_sector:
+        db 2
+    .start_cyl:
         db 0
-    .base16high:
-        dw 0
-    .fs_type:
+    .sys_id:
         db 0
-    .sig2:
+    .end_head:
         db 0
-    .limit16high:
-        dw 0
-    .base32low:
-        dd 0
-    .limit32low:
+    .end_sector:
+        db 0
+    .end_cyl:
+        db 0
+    .start_LBA:
+        dd 1
+    .size:
         dd 0
 Part_1:
     .flags:
+        db 0x81;bootable offset 0
+    .start_head:
         db 0
-    .sig1:
+    .start_sector:
+        db 2
+    .start_cyl:
         db 0
-    .base16high:
-        dw 0
-    .fs_type:
+    .sys_id:
         db 0
-    .sig2:
+    .end_head:
         db 0
-    .limit16high:
-        dw 0
-    .base32low:
+    .end_sector:
+        db 0
+    .end_cyl:
+        db 0
+    .start_LBA:
         dd 0
-    .limit32low:
+    .size:
         dd 0
 Part_2:
     .flags:
+        db 0x81;bootable offset 0
+    .start_head:
         db 0
-    .sig1:
+    .start_sector:
+        db 2
+    .start_cyl:
         db 0
-    .base16high:
-        dw 0
-    .fs_type:
+    .sys_id:
         db 0
-    .sig2:
+    .end_head:
         db 0
-    .limit16high:
-        dw 0
-    .base32low:
+    .end_sector:
+        db 0
+    .end_cyl:
+        db 0
+    .start_LBA:
         dd 0
-    .limit32low:
+    .size:
+        dd 0
+Part_3:
+    .flags:
+        db 0x81;bootable offset 0
+    .start_head:
+        db 0
+    .start_sector:
+        db 2
+    .start_cyl:
+        db 0
+    .sys_id:
+        db 0
+    .end_head:
+        db 0
+    .end_sector:
+        db 0
+    .end_cyl:
+        db 0
+    .start_LBA:
+        dd 0
+    .size:
         dd 0
 db 0x55, 0xaa
