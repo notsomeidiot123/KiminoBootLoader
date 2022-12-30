@@ -2,6 +2,8 @@
 
 KiminoBoot is a 3-stage Partition & Master bootloader, as shown in [KiminoOS](https://github.com/notsomeidiot123/KiminoOS/)
 
+If enough people start using or collabortating on this, I'll start working to make it a legitimate bootloader that supports stuff like GPL and UEFI, but until then, if i make a change to it in one of my projects that isn't super specific, i'll update it here, otherwise it'll just kinda sit here.
+
 ## DETAILS:
 
   CURRENTLY NEITHER SUPPORT FLOPPY BOOT
