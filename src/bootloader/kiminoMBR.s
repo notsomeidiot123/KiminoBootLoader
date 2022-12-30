@@ -85,8 +85,8 @@ power:
 
 jmp $
     
-%include "src/MBR/strutils.s"
-%include "src/MBR/bootutils.s"
+%include "bootloader/strutils.s"
+%include "bootloader/bootutils.s"
 
 bfloppy: db "BOOTING FROM FLOPPY DISK", 0xa, 0xd, 0x0
 nobootstr: db "NO BOOTABLE PARTITION FOUND", 0xa, 0xd, 0x0
